@@ -3,14 +3,14 @@ import CarController from '../Controllers/CarController';
 
 const routes = Router();
 
-routes.get(
-  '/cars/:id',
-  (req, res, next) => new CarController(req, res, next).getById(),
-);
-
 routes.put(
   '/cars/:id',
   (req, res, next) => new CarController(req, res, next).updateById(),
+);
+
+routes.get(
+  '/cars/:id',
+  (req, res, next) => new CarController(req, res, next).getById(),
 );
 
 routes.get(
