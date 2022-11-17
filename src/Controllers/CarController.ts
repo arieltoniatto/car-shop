@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { isValidObjectId } from 'mongoose';
 import ICar from '../Interfaces/ICar';
 import CarService from '../Services/CarService';
 
@@ -32,5 +33,19 @@ export default class CarController {
     } catch (err) {
       return this.res.status(500).json({ err });
     }
+  }
+
+  public async findAll() {
+    const allCars = await this.service.findAll();
+    return this.res.status(200).json(allCars);
+  }
+
+  public async getById() {
+    const result = await this.service.findById(this.req.params.id);
+    if (!result) return this.res.status(404).json({ message: 'Car not found' });
+    if (!isValidObjectId(this.req.params.id)) {
+      return this.res.status(422).json({ message: 'Invalid mongo id' });
+    }
+    return this.res.status(200).json(result);
   }
 }
