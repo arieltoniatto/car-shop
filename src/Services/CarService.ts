@@ -1,4 +1,3 @@
-import { isValidObjectId } from 'mongoose';
 import Car from '../Domains/Car';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarModel';
@@ -25,12 +24,19 @@ export default class CarService {
   }
 
   public async findById(id: string) {
-    if (!isValidObjectId(id)) return { message: 'Invalid Mongo id' };
     const carODM = new CarODM();
     const oneCar = await carODM.getById(id);
 
     if (!oneCar) return null;
 
     return this.createCarDomain(oneCar);
+  }
+
+  public async updateOne(id: string, car: ICar) {
+    const carODM = new CarODM();
+    const updatedCar = await carODM.update(id, car as ICar);
+    if (!updatedCar) return null;
+
+    return this.createCarDomain(updatedCar);
   }
 }
