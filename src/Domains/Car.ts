@@ -2,8 +2,8 @@ import ICar from '../Interfaces/ICar';
 import Vehicle from './Vehicle';
 
 export default class Car extends Vehicle {
-  doorsQty: number;
-  seatsQty: number;
+  private doorsQty: number;
+  private seatsQty: number;
 
   constructor(car: ICar) {
     super(car);
