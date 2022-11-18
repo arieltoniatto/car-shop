@@ -34,4 +34,8 @@ export default class CarODM extends AbstractODM<ICar> {
       { new: true },
     );
   }
+
+  public async delete(id: string): Promise<ICar | null> {
+    return this.model.findByIdAndDelete(id);
+  }
 }

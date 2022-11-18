@@ -34,4 +34,8 @@ export default class MotorcycleODM extends AbstractODM<IMotorcycle> {
       { new: true },
     );
   }
+
+  public async delete(id: string): Promise<IMotorcycle | null> {
+    return this.model.findByIdAndDelete(id);
+  }
 }

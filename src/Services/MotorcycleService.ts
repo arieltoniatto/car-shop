@@ -3,6 +3,10 @@ import IMotorcycle from '../Interfaces/IMotorcycle';
 import MotorcycleODM from '../Models/MotorcycleModel';
 
 export default class MotorcycleService {
+  constructor(
+    private _motorcycleODM = new MotorcycleODM(),
+  ) {}
+
   private createMotorcycleDomain(motorcycle: IMotorcycle | null): Motorcycle | null {
     if (motorcycle) {
       return new Motorcycle(motorcycle);
@@ -11,14 +15,12 @@ export default class MotorcycleService {
   }
 
   public async create(motorcycle: IMotorcycle) {
-    const motorcycleODM = new MotorcycleODM();
-    const newMotorcycle = await motorcycleODM.create(motorcycle);
+    const newMotorcycle = await this._motorcycleODM.create(motorcycle);
     return this.createMotorcycleDomain(newMotorcycle);
   }
 
   public async findAll() {
-    const motorcycleODM = new MotorcycleODM();
-    const allMotorcycles = await motorcycleODM.findAll();
+    const allMotorcycles = await this._motorcycleODM.findAll();
     const mapMotorcycles = allMotorcycles.map(
       (motorcycle) => this.createMotorcycleDomain(motorcycle),
     );
@@ -26,8 +28,7 @@ export default class MotorcycleService {
   }
 
   public async findById(id: string) {
-    const motorcycleODM = new MotorcycleODM();
-    const oneMotorcycle = await motorcycleODM.getById(id);
+    const oneMotorcycle = await this._motorcycleODM.getById(id);
 
     if (!oneMotorcycle) return null;
 
@@ -35,10 +36,15 @@ export default class MotorcycleService {
   }
 
   public async updateOne(id: string, car: IMotorcycle) {
-    const carODM = new MotorcycleODM();
-    const updatedCar = await carODM.update(id, car as IMotorcycle);
-    if (!updatedCar) return null;
+    const updatedMotorcycle = await this._motorcycleODM.update(id, car as IMotorcycle);
+    if (!updatedMotorcycle) return null;
 
-    return this.createMotorcycleDomain(updatedCar);
+    return this.createMotorcycleDomain(updatedMotorcycle);
+  }
+
+  public async delete(id: string) {
+    const result = await this._motorcycleODM.delete(id);
+
+    return result;
   }
 }

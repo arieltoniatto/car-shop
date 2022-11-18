@@ -8,12 +8,16 @@ export default class MotorcycleController {
   private res: Response;
   private next: NextFunction;
   private service: MotorcycleService;
+  private invalidMongoId: string;
+  private notFound: string;
 
   constructor(req: Request, res: Response, next: NextFunction) {
     this.req = req;
     this.res = res;
     this.next = next;
     this.service = new MotorcycleService();
+    this.invalidMongoId = 'Invalid mongo id';
+    this.notFound = 'Motorcycle not found';
   }
 
   public async create() {
@@ -43,19 +47,28 @@ export default class MotorcycleController {
 
   public async getById() {
     if (!isValidObjectId(this.req.params.id)) {
-      return this.res.status(422).json({ message: 'Invalid mongo id' });
+      return this.res.status(422).json({ message: this.invalidMongoId });
     }
     const result = await this.service.findById(this.req.params.id);
-    if (!result) return this.res.status(404).json({ message: 'Motorcycle not found' });
+    if (!result) return this.res.status(404).json({ message: this.notFound });
     return this.res.status(200).json(result);
   }
 
   public async updateById() {
     if (!isValidObjectId(this.req.params.id)) {
-      return this.res.status(422).json({ message: 'Invalid mongo id' });
+      return this.res.status(422).json({ message: this.invalidMongoId });
     }
     const result = await this.service.updateOne(this.req.params.id, this.req.body);
-    if (!result) return this.res.status(404).json({ message: 'Motorcycle not found' });
+    if (!result) return this.res.status(404).json({ message: this.notFound });
     return this.res.status(200).json(result);
+  }
+
+  public async delete() {
+    if (!isValidObjectId(this.req.params.id)) {
+      return this.res.status(422).json({ message: this.invalidMongoId });
+    }
+    const result = await this.service.delete(this.req.params.id);
+    if (!result) return this.res.status(404).json({ message: this.notFound });
+    return this.res.sendStatus(204);
   }
 }
