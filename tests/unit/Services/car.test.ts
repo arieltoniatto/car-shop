@@ -54,4 +54,36 @@ describe('', () => {
 
     expect(result).to.be.deep.equal(carDomain);
   });
+
+  it('Verify if its not possibile to find a car with an inexistent id', async function () {
+    sinon.stub(Model, 'findById').resolves(null);
+
+    const result = await service.findById('507f1f77bcf86cd799439012');
+
+    expect(result).to.be.deep.equal(null);
+  });
+
+  it('Verify if its possibile to update a car by id', async function () {
+    sinon.stub(Model, 'findByIdAndUpdate').resolves(carOutput);
+
+    const result = await service.updateOne('507f1f77bcf86cd799439011', carInput);
+
+    expect(result).to.be.deep.equal(carDomain);
+  });
+
+  it('Verify if its NOT possibile to update a car with an inexistent id', async function () {
+    sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+
+    const result = await service.updateOne('507f1f77bcf86cd799439012', carInput);
+
+    expect(result).to.be.deep.equal(null);
+  });
+
+  it('Verify if its possibile to delete a car by id', async function () {
+    sinon.stub(Model, 'findByIdAndDelete').resolves({});
+
+    const result = await service.delete('507f1f77bcf86cd799439011');
+
+    expect(result).to.be.deep.equal({});
+  });
 });
