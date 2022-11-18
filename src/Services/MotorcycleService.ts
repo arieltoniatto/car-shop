@@ -33,4 +33,12 @@ export default class MotorcycleService {
 
     return this.createMotorcycleDomain(oneMotorcycle);
   }
+
+  public async updateOne(id: string, car: IMotorcycle) {
+    const carODM = new MotorcycleODM();
+    const updatedCar = await carODM.update(id, car as IMotorcycle);
+    if (!updatedCar) return null;
+
+    return this.createMotorcycleDomain(updatedCar);
+  }
 }
